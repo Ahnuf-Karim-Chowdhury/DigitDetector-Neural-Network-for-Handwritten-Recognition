@@ -1,94 +1,118 @@
 # DigitDetector-Neural-Network-for-Handwritten-Recognition
 
-This repository contains two implementations of a neural network for handwritten digit recognition using the MNIST dataset: a "normal" implementation and an "optimized" version. Both implementations aim to classify handwritten digits from the MNIST dataset using a simple neural network architecture.
+This repository contains two implementations of a neural network for classification tasks: a **Normal Code** and an **Optimized Code**. Both codes are designed to classify data from the `train.csv` file, which is assumed to contain image data (e.g., MNIST dataset). Below is an explanation of how each code works, their accuracy, and how they respond to new data. Additionally, a comparison of the two approaches is provided.
 
-## Dataset
+---
 
-The dataset used is the MNIST dataset, loaded from a CSV file ("train.csv"). Each row represents an image, with the first column being the label (digit 0-9) and the remaining columns being pixel values (0-255).
+## **Normal Code**
 
-## Data Preprocessing
+### **Overview**
+The normal code implements a simple feedforward neural network with one hidden layer. It uses the ReLU activation function for the hidden layer and softmax for the output layer. The network is trained using gradient descent with backpropagation.
 
-Both implementations start by loading the data, shuffling it, and splitting it into development (validation) and training sets.
+### **Key Components**
+1. **Data Loading and Preprocessing**:
+   - The data is loaded from `train.csv` and shuffled to ensure randomness.
+   - The dataset is split into a development set (`data_dev`) and a training set (`data_train`).
 
--   **Shuffling:** The data is shuffled to ensure randomness in the training process.
--   **Splitting:**
-    -      The first 1000 samples are used as the development set (`x_dev`, `y_dev`).
-    -      The remaining samples (excluding the first 10,000 in the optimized and 1000 in the normal code) are used as the training set (`x_train`, `y_train`).
--   **Transposition:** The data is transposed so that each column represents an image, which is a common practice in neural network implementations for efficient matrix operations.
+2. **Parameter Initialization**:
+   - Weights (`w1`, `w2`) and biases (`b1`, `b2`) are initialized randomly.
 
-## Normal Code Explanation
+3. **Forward Propagation**:
+   - The input data is passed through the network to compute the output (`a2`) using ReLU and softmax activation functions.
 
-### Architecture
+4. **Backpropagation**:
+   - Gradients are computed for weights and biases using the chain rule.
+   - The gradients are used to update the parameters during training.
 
-The normal code uses a simple two-layer neural network.
+5. **Training**:
+   - The model is trained using gradient descent for a fixed number of iterations.
+   - Accuracy is printed every 50 iterations.
 
--      **Initialization:** Weights (`w1`, `w2`) are initialized with small random values, and biases (`b1`, `b2`) are initialized with zeros.
--   **Forward Propagation:**
-    -      Computes the weighted sum of inputs and biases (`z1`, `z2`).
-    -      Applies the ReLU activation function to the first layer (`a1`).
-    -   Applies the softmax activation function to the output layer (`a2`).
--   **Backpropagation:**
-    -      Calculates the gradients of the loss function with respect to the weights and biases (`dw1`, `db1`, `dw2`, `db2`).
-    -      Uses one-hot encoding for the target labels.
-    -   Uses the derivative of the ReLU function.
--   **Parameter Updates:** Updates the weights and biases using gradient descent.
--   **Prediction:** Predicts the digit by taking the argmax of the output layer.
--   **Accuracy:** Calculates the accuracy of the predictions.
--   **Training:** The `gradient_descent` function trains the network for a specified number of iterations.
--   **Testing:** The `test_predictions` function displays a sample image and its predicted label.
--   **Test/Train:** The test set is the data_dev, and the train set is the data_train. The test set is used to validate the model's performance on unseen data, while the training set is used to adjust the model's parameters.
+6. **Testing**:
+   - A sample image from the training set is used to test the model's predictions.
 
-### Accuracy and Response to New Data
+### **Accuracy**
+- The accuracy of the normal code is very low (~9.8%) and does not improve over iterations. This suggests that the model is not learning effectively.
 
-The normal code shows very poor accuracy in the provided output, consistently around 0.098. This indicates the model is not learning effectively. This poor accuracy may be due to a few reasons.
--   **Learning Rate:** The learning rate may be too high or too low.
--   **Initialization:** The weight initialization might not be optimal.
--   **Network Architecture:** The network architecture might be too simple.
--   **Training set size:** The normal code is training with a very large training set, this may be causing issues.
--   The code does have the ability to respond to new data by using the trained weights and biases to make predictions on the new data. However, due to its low accuracy, the predictions may be inaccurate.
+### **Response to New Data**
+- The model's poor accuracy indicates that it is not generalizing well to new data. It is likely underfitting due to insufficient complexity or improper hyperparameter tuning.
 
-## Optimized Code Explanation
+---
 
-### Architecture
+## **Optimized Code**
 
-The optimized code uses a more flexible multi-layer neural network architecture.
+### **Overview**
+The optimized code improves upon the normal code by introducing a more flexible architecture with multiple hidden layers. It also includes better initialization and numerical stability improvements.
 
--   **Initialization:** Weights and biases are initialized with small random values using a more general initialization function that accepts layer sizes.
--   **Forward Propagation:**
-    -      Uses a loop to handle multiple layers.
-    -      Stores intermediate values in a cache for backpropagation.
-    -   Uses ReLU activation for hidden layers and softmax for the output layer.
--   **Backpropagation:**
-    -      Calculates gradients for all layers.
-    -      Uses a loop to iterate through the layers in reverse order.
-    -   Uses the cache to retrieve intermediate values.
--   **Parameter Updates:** Updates parameters using gradient descent and a learning rate.
--   **Prediction and Accuracy:** Similar to the normal code.
--   **Training:** The `gradient_descent` function trains the network for a specified number of iterations.
--   **Test/Train:** The test set is the data_dev, and the train set is the data_train. The test set is used to validate the model's performance on unseen data, while the training set is used to adjust the model's parameters.
+### **Key Components**
+1. **Data Loading and Preprocessing**:
+   - Similar to the normal code, the data is loaded, shuffled, and split into development and training sets.
 
-### Accuracy and Response to New Data
+2. **Parameter Initialization**:
+   - Parameters are initialized dynamically based on the specified layer sizes.
+   - Weights are scaled by `0.01` to avoid large initial values, which can lead to instability.
 
-The optimized code also shows poor accuracy, consistently around 0.11. This indicates similar learning issues as the normal code. However, it is slightly better than the normal code, indicating the changes made have a small positive effect. The optimized code has the ability to respond to new data by using the trained parameters to make predictions. However, due to its low accuracy, the predictions may be inaccurate.
+3. **Forward Propagation**:
+   - The network supports multiple hidden layers, with ReLU activation for hidden layers and softmax for the output layer.
+   - A cache is maintained to store intermediate values for use in backpropagation.
 
-## Comparison
+4. **Backpropagation**:
+   - Gradients are computed for all layers using the cached values from forward propagation.
+   - The ReLU derivative is used to propagate errors backward.
 
--   **Flexibility:** The optimized code is more flexible due to its ability to handle multiple layers.
--   **Readability:** The optimized code is more organized and readable due to the use of dictionaries and loops.
--   **Accuracy:** Both implementations show poor accuracy, but the optimized code is slightly better.
--   **Efficiency:** The optimized code is more efficient due to the use of vectorized operations and optimized loops.
--   **Maintainability:** The optimized code is easier to maintain and extend due to its modular design.
+5. **Training**:
+   - The model is trained using gradient descent, with accuracy printed every 50 iterations.
 
-## Test.ipynb Explanation
+6. **Testing**:
+   - The model's predictions can be tested on new data, but this part is not explicitly shown in the provided code.
 
-The `test.ipynb` file contains a slightly modified version of the "normal" code. The main purpose of this notebook is to test the model's predictions on sample images and visualize the results.
+### **Accuracy**
+- The accuracy of the optimized code is also low (~11.5%) and does not improve over iterations. This indicates that the model is still not learning effectively.
 
--   **Data Loading and Preprocessing:** Similar to the other implementations.
--   **Model Initialization, Forward Propagation, Backpropagation, and Parameter Updates:** Same as the normal code.
--   **Training:** The model is trained using gradient descent.
--   **Prediction and Visualization:** The `test_predictions` function displays a sample image and its predicted label.
--   **Test/Train:** The test set is the data_dev, and the train set is the data_train. The test set is used to validate the model's performance on unseen data, while the training set is used to adjust the model's parameters.
+### **Response to New Data**
+- Like the normal code, the optimized code does not generalize well to new data. The lack of improvement in accuracy suggests that further optimizations or architectural changes are needed.
 
-## Conclusion
+---
 
-The optimized code is better than the normal code due to its flexibility, readability, efficiency, and maintainability. However, both implementations require further tuning to improve their accuracy. The `test.ipynb` file provides a way to visualize the model's predictions and evaluate its performance.
+## **Comparison: Normal vs Optimized Code**
+
+| **Aspect**               | **Normal Code**                          | **Optimized Code**                       |
+|--------------------------|------------------------------------------|------------------------------------------|
+| **Architecture**          | Single hidden layer                      | Multiple hidden layers                   |
+| **Parameter Initialization** | Random initialization with fixed sizes | Dynamic initialization based on layer sizes |
+| **Forward Propagation**   | Fixed for one hidden layer               | Flexible for multiple layers             |
+| **Backpropagation**       | Manual gradient computation              | Automated gradient computation           |
+| **Accuracy**              | ~9.8% (no improvement)                  | ~11.5% (no improvement)                 |
+| **Generalization**        | Poor                                    | Poor                                    |
+| **Flexibility**           | Limited                                 | High                                    |
+
+### **Which is Better?**
+- The **optimized code** is better in terms of flexibility and scalability due to its support for multiple hidden layers and dynamic parameter initialization. However, both codes suffer from poor accuracy and generalization, indicating that further improvements are needed, such as:
+  - Adjusting hyperparameters (learning rate, number of iterations).
+  - Using more advanced optimization techniques (e.g., Adam optimizer).
+  - Adding regularization (e.g., dropout, L2 regularization).
+  - Increasing the complexity of the model (e.g., more layers, more neurons).
+
+---
+
+## **Training and Testing**
+
+### **Training**
+- Both codes use gradient descent to train the model on the training set (`x_train`, `y_train`).
+- The training process involves:
+  1. Forward propagation to compute predictions.
+  2. Backpropagation to compute gradients.
+  3. Updating parameters using the gradients.
+
+### **Testing**
+- The models are tested on a sample from the training set (`x_train`).
+- The `test_predictions` function displays the model's prediction and the actual label for a given image.
+
+### **Approach**
+- The normal code uses a fixed architecture with one hidden layer.
+- The optimized code allows for a flexible architecture with multiple hidden layers, making it more adaptable to different datasets and tasks.
+
+---
+
+## **Conclusion**
+While the optimized code is more flexible and scalable, both implementations currently suffer from poor accuracy and generalization. To improve performance, consider experimenting with hyperparameters, adding regularization, or using more advanced optimization techniques. The optimized code provides a better foundation for further improvements due to its flexible architecture.
