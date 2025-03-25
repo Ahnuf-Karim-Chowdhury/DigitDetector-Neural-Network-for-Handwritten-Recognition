@@ -114,8 +114,10 @@ The optimized code improves upon the normal code by introducing a more flexible 
 
 ---
 
-![SVM Accuracy Graph](https://github.com/Ahnuf-Karim-Chowdhury/DigitDetector-Neural-Network-for-Handwritten-Recognition/blob/main/01.png?raw=true)
-![SVM Accuracy Graph](https://github.com/Ahnuf-Karim-Chowdhury/DigitDetector-Neural-Network-for-Handwritten-Recognition/blob/main/06.png?raw=true)
+<!--
+![](https://github.com/Ahnuf-Karim-Chowdhury/DigitDetector-Neural-Network-for-Handwritten-Recognition/blob/main/01.png?raw=true)
+![](https://github.com/Ahnuf-Karim-Chowdhury/DigitDetector-Neural-Network-for-Handwritten-Recognition/blob/main/06.png?raw=true)
+-->
 
 ## **Conclusion**
 While the optimized code is more flexible and scalable, both implementations currently suffer from poor accuracy and generalization. To improve performance, consider experimenting with hyperparameters, adding regularization, or using more advanced optimization techniques. The optimized code provides a better foundation for further improvements due to its flexible architecture.
